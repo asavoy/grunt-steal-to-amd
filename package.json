@@ -1,0 +1,19 @@
+{
+  "name": "grunt-steal-to-amd",
+  "version": "0.1.0",
+  "description": "Convert StealJS format modules into AMD.",
+  "dependencies": {
+    "es-simpler-traverser": "0.0.1",
+    "recast": "^0.9.11"
+  },
+  "peerDependencies": {
+    "grunt": "~0.4.4"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "gruntplugin"
+  ],
+  "license": "MIT"
+}
