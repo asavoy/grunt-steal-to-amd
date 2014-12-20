@@ -181,6 +181,16 @@ function transformSource(source, convertMap, convertExtensionsToPlugins) {
         if (name.slice(-jsExtension.length) === jsExtension) {
             return name.replace('.js', '');
         }
+        // No change for relative paths: "./path/name" => "./path/name"
+        var relativePrefix = './';
+        var pluginSuffix = '!';
+        // Does name start with a relative path?
+        if (name.slice(0, relativePrefix.length) === relativePrefix) {
+            // Does it not use a plugin?
+            if (name.slice(-pluginSuffix.length) !== pluginSuffix) {
+                return name;
+            }
+        }
         // Lastly, change "path/name" => "path/name/name".
         var depParts = name.split('/');
         depParts.push(depParts[depParts.length - 1]);
