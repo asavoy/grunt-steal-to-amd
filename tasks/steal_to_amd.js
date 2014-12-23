@@ -99,10 +99,24 @@ function transformSource(source, convertMap, convertExtensionsToPlugins) {
     // The last argument...
     var lastArg = callExpr.arguments[callExpr.arguments.length - 1];
 
-    // The last argument should be a function call...
+    // The last argument should be a function...
     var funcArg = null;
     if (lastArg.type === 'FunctionExpression') {
         funcArg = lastArg;
+    }
+    else {
+        // The RequireJS optimizer won't transform a define() call if the
+        // last argument is not a function (e.g. `define(['dep1'])`).
+        // So we have to inject one in.
+        // Unfortunately recast doesn't let us control formatting/whitespace
+        // directly, so we can a source string formatted the way we like,
+        // and parse it with recast.
+        var newFuncSource = '[function() {\n}]';
+        var newFuncAst = recast.parse(newFuncSource);
+        var newFuncExpr = newFuncAst.program.body[0].expression.elements[0];
+        funcArg = newFuncExpr;
+        // Inject into the define call as the last argument.
+        callExpr.arguments.push(funcArg);
     }
 
     // Now get all the other args, they should be names of the dependencies.
